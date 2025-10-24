@@ -12,93 +12,70 @@ public class Review {
   private static ArrayList<String> posAdjectives = new ArrayList<String>();
   private static ArrayList<String> negAdjectives = new ArrayList<String>();
   
-  static{
+  static {
     try {
       Scanner input = new Scanner(new File("cleanSentiment.csv"));
-      while(input.hasNextLine()){
+      while (input.hasNextLine()) {
         String[] temp = input.nextLine().split(",");
-        sentiment.put(temp[0],Double.parseDouble(temp[1]));
-        // System.out.println("added "+ temp[0]+", "+temp[1]);
+        sentiment.put(temp[0], Double.parseDouble(temp[1]));
       }
       input.close();
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       System.out.println("Error reading or parsing cleanSentiment.csv");
     }
   
-  
-  //read in the positive adjectives in postiveAdjectives.txt
-     try {
+    try {
       Scanner input = new Scanner(new File("positiveAdjectives.txt"));
-      while(input.hasNextLine()){
+      while (input.hasNextLine()) {
         posAdjectives.add(input.nextLine().trim());
       }
       input.close();
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       System.out.println("Error reading or parsing postitiveAdjectives.txt\n" + e);
     }   
  
-  //read in the negative adjectives in negativeAdjectives.txt
-     try {
+    try {
       Scanner input = new Scanner(new File("negativeAdjectives.txt"));
-      while(input.hasNextLine()){
+      while (input.hasNextLine()) {
         negAdjectives.add(input.nextLine().trim());
       }
       input.close();
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       System.out.println("Error reading or parsing negativeAdjectives.txt");
     }   
   }
   
-  /** 
-   * returns a string containing all of the text in fileName (including punctuation), 
-   * with words separated by a single space 
-   */
-  public static String textToString( String fileName )
-  {  
+  public static String textToString(String fileName) {  
     String temp = "";
     try {
       Scanner input = new Scanner(new File(fileName));
-      
-      //add 'words' in the file to the string, separated by a single space
-      while(input.hasNext()){
+      while (input.hasNext()) {
         temp = temp + input.next() + " ";
       }
       input.close();
-      
-    }
-    catch(Exception e){
+    } catch (Exception e) {
       System.out.println("Unable to locate " + fileName);
     }
-    // remove any additional space that may have been added at the end of the string
     return temp.trim();
   }
   
-  /**
-   * @returns the sentiment value of word as a number between -1 (very negative) to 1 (very positive sentiment) 
-   */
-  public static double sentimentVal( String word )
-  {
-    try
-    {
-      return sentiment.get(word.toLowerCase());
-    }
-    catch(Exception e)
-    {
-      return 0;
+  public static double sentimentVal(String word) {
+    word = word.toLowerCase();
+    if (sentiment.containsKey(word)) {
+      return sentiment.get(word);
+    } else if (posAdjectives.contains(word)) {
+      return 1.0;
+    } else if (negAdjectives.contains(word)) {
+      return -1.0;
+    } else {
+      return 0.0;
     }
   }
   
-  /**
-   * Returns the ending punctuation of a string, or the empty string if there is none 
-   */
-  public static String getPunctuation( String word )
-  { 
+  public static String getPunctuation(String word) { 
     String punc = "";
-    for(int i=word.length()-1; i >= 0; i--){
-      if(!Character.isLetterOrDigit(word.charAt(i))){
+    for (int i = word.length() - 1; i >= 0; i--) {
+      if (!Character.isLetterOrDigit(word.charAt(i))) {
         punc = punc + word.charAt(i);
       } else {
         return punc;
@@ -107,52 +84,129 @@ public class Review {
     return punc;
   }
 
-      /**
-   * Returns the word after removing any beginning or ending punctuation
-   */
-  public static String removePunctuation( String word )
-  {
-    while(word.length() > 0 && !Character.isAlphabetic(word.charAt(0)))
-    {
+  public static String removePunctuation(String word) {
+    while (word.length() > 0 && !Character.isAlphabetic(word.charAt(0))) {
       word = word.substring(1);
     }
-    while(word.length() > 0 && !Character.isAlphabetic(word.charAt(word.length()-1)))
-    {
-      word = word.substring(0, word.length()-1);
+    while (word.length() > 0 && !Character.isAlphabetic(word.charAt(word.length() - 1))) {
+      word = word.substring(0, word.length() - 1);
     }
-    
     return word;
   }
  
-  /** 
-   * Randomly picks a positive adjective from the positiveAdjectives.txt file and returns it.
-   */
-  public static String randomPositiveAdj()
-  {
+  public static String randomPositiveAdj() {
     int index = (int)(Math.random() * posAdjectives.size());
     return posAdjectives.get(index);
   }
   
-  /** 
-   * Randomly picks a negative adjective from the negativeAdjectives.txt file and returns it.
-   */
-  public static String randomNegativeAdj()
-  {
+  public static String randomNegativeAdj() {
     int index = (int)(Math.random() * negAdjectives.size());
     return negAdjectives.get(index);
-    
   }
   
-  /** 
-   * Randomly picks a positive or negative adjective and returns it.
-   */
-  public static String randomAdjective()
-  {
+  public static String randomAdjective() {
     boolean positive = Math.random() < .5;
-    if(positive){
+    if (positive) {
       return randomPositiveAdj();
     } else {
       return randomNegativeAdj();
     }
+  }
+
+  public static double averageDisneylandRating() {
+    double total = 0;
+    int count = 0;
+    try {
+      Scanner input = new Scanner(new File("DisneylandReviewsList.csv"));
+      if (input.hasNextLine()) input.nextLine();
+      while (input.hasNextLine()) {
+        String[] parts = input.nextLine().split(",");
+        if (parts.length >= 1 && !parts[0].isEmpty()) {
+          total += Double.parseDouble(parts[0]);
+          count++;
+        }
+      }
+      input.close();
+    } catch (Exception e) {
+      System.out.println("Error reading or parsing DisneylandReviewsList.csv");
+    }
+    return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0;
+  }
+
+  public static double averageUniversalStudiosRating() {
+    double total = 0;
+    int count = 0;
+    try {
+      Scanner input = new Scanner(new File("UniversalStudiosReviewsList.csv"));
+      if (input.hasNextLine()) input.nextLine();
+      while (input.hasNextLine()) {
+        String line = input.nextLine().trim();
+        if (line.isEmpty()) continue;
+        String[] parts = line.split(",");
+        if (parts.length >= 1 && !parts[0].isEmpty()) {
+          String ratingStr = parts[0].replaceAll("[^0-9.]", "");
+          if (!ratingStr.isEmpty()) {
+            total += Double.parseDouble(ratingStr);
+            count++;
+          }
+        }
+      }
+      input.close();
+    } catch (Exception e) {
+      System.out.println("Error reading or parsing UniversalStudiosReviewsList.csv");
+    }
+    return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0;
+  }
+
+  public static double averageDisneylandSentiment() {
+    double totalSentiment = 0;
+    int count = 0;
+    try {
+      Scanner input = new Scanner(new File("DisneylandReviewsList.csv"));
+      if (input.hasNextLine()) input.nextLine();
+      while (input.hasNextLine()) {
+        String[] parts = input.nextLine().split(",");
+        if (parts.length >= 2) {
+          String[] words = parts[1].split(" ");
+          for (String w : words) {
+            double val = sentimentVal(removePunctuation(w));
+            if (val != 0) {
+              totalSentiment += val;
+              count++;
+            }
+          }
+        }
+      }
+      input.close();
+    } catch (Exception e) {
+      System.out.println("Error calculating Disneyland sentiment");
+    }
+    return count > 0 ? Math.round((totalSentiment / count) * 100.0) / 100.0 : 0;
+  }
+
+  public static double averageUniversalSentiment() {
+    double totalSentiment = 0;
+    int count = 0;
+    try {
+      Scanner input = new Scanner(new File("UniversalStudiosReviewsList.csv"));
+      if (input.hasNextLine()) input.nextLine();
+      while (input.hasNextLine()) {
+        String[] parts = input.nextLine().split(",");
+        if (parts.length >= 2) {
+          String[] words = parts[1].split(" ");
+          for (String w : words) {
+            double val = sentimentVal(removePunctuation(w));
+            if (val != 0) {
+              totalSentiment += val;
+              count++;
+            }
+          }
+        }
+      }
+      input.close();
+    } catch (Exception e) {
+      System.out.println("Error calculating Universal Studios sentiment");
+    }
+    return count > 0 ? Math.round((totalSentiment / count) * 100.0) / 100.0 : 0;
   }
 }
