@@ -83,7 +83,7 @@ public class Review {
   }
 // removes punctuation from the beginning and end of a word
   public static String removePunctuation(String word) {
-    while (word.length() > 0 && !Character.isAlphabetic(word.charAt(0))) {
+    while (word.length() > 0 && !Character.isAlphabetic(word.charAt(0))) { // Compound Boolean
       word = word.substring(1);
     }
     while (word.length() > 0 && !Character.isAlphabetic(word.charAt(word.length() - 1))) {
@@ -156,7 +156,7 @@ public class Review {
     return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0;
   }
 // calculates the average sentiment for Disneyland reviews
-  public static double averageDisneylandSentiment() {
+  public static double averageDisneylandSentiment() { // String Method #1
     double totalSentiment = 0;
     int count = 0;
     try {
@@ -182,7 +182,7 @@ public class Review {
     return count > 0 ? Math.round((totalSentiment / count) * 100.0) / 100.0 : 0;
   }
 
-  public static double averageUniversalSentiment() {
+  public static double averageUniversalSentiment() { // String Method #2
     double totalSentiment = 0;
     int count = 0;
     try {
