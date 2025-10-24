@@ -18,7 +18,7 @@ class ReviewRunner {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-    System.out.println("------");
+    System.out.println("----------------------------------");
     System.out.println("End of Review Analysis: People seem to like Universal Studios slightly more based on the average review rating and sentiment analysis.");
   }
 }
