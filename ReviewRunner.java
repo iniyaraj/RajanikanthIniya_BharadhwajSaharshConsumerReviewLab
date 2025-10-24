@@ -1,5 +1,5 @@
 class ReviewRunner {
-  public static void main(String[] args) 
+  public static void main(String[] args) // main method
   {;
     double disneylandAverage = Review.averageDisneylandRating();
     System.out.println("Average Disneyland Rating: " + disneylandAverage);
@@ -8,23 +8,18 @@ class ReviewRunner {
     System.out.println("Average Universal Studios Rating: " + universalAverage);
 
     double disneylandSentiment = Review.averageDisneylandSentiment();
-    System.out.println("Average Disneyland Sentiment: " + disneylandSentiment);
+    System.out.println("Average Disneyland Sentiment Value: " + disneylandSentiment);
 
     double universalSentiment = Review.averageUniversalSentiment();
-    System.out.println("Average Universal Studios Sentiment: " + universalSentiment);
+    System.out.println("Average Universal Studios Sentiment Value: " + universalSentiment);
 
    try {
-            // Pause for 2 seconds (2000 milliseconds)
-            Thread.sleep(2000); 
+            Thread.sleep(2000); // Pause for 2 seconds 
         } catch (InterruptedException e) {
-            // Handle the case where the thread is interrupted while sleeping
             e.printStackTrace();
         }
+    System.out.println("------");
     System.out.println("End of Review Analysis: People seem to like Universal Studios slightly more based on the average review rating and sentiment analysis.");
-
-
-
-
   }
 }
 

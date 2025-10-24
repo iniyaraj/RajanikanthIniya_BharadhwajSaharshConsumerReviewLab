@@ -9,6 +9,7 @@ public class Review {
   private static ArrayList<String> posAdjectives = new ArrayList<String>();
   private static ArrayList<String> negAdjectives = new ArrayList<String>();
   
+  //static block to read in the sentiment values and positive and negative adjectives in their respective ArrayLists
   static {
     try {
       Scanner input = new Scanner(new File("cleanSentiment.csv"));
@@ -41,7 +42,7 @@ public class Review {
       System.out.println("Error reading or parsing negativeAdjectives.txt");
     }   
   }
-  
+  // returns the entire text of a file as a String
   public static String textToString(String fileName) {  
     String temp = "";
     try {
@@ -55,7 +56,7 @@ public class Review {
     }
     return temp.trim();
   }
-  
+  // returns the sentiment value of a word as a double
   public static double sentimentVal(String word) {
     word = word.toLowerCase();
     if (sentiment.containsKey(word)) {
@@ -68,7 +69,7 @@ public class Review {
       return 0.0;
     }
   }
-  
+  // returns the ending punctuation of a word, or the empty string if there is none
   public static String getPunctuation(String word) { 
     String punc = "";
     for (int i = word.length() - 1; i >= 0; i--) {
@@ -80,7 +81,7 @@ public class Review {
     }
     return punc;
   }
-
+// removes punctuation from the beginning and end of a word
   public static String removePunctuation(String word) {
     while (word.length() > 0 && !Character.isAlphabetic(word.charAt(0))) {
       word = word.substring(1);
@@ -90,17 +91,17 @@ public class Review {
     }
     return word;
   }
- 
+ // returns a random positive adjective from the positiveAdjectives.txt file
   public static String randomPositiveAdj() {
     int index = (int)(Math.random() * posAdjectives.size());
     return posAdjectives.get(index);
   }
-  
+  // returns a random negative adjective from the negativeAdjectives.txt file
   public static String randomNegativeAdj() {
     int index = (int)(Math.random() * negAdjectives.size());
     return negAdjectives.get(index);
   }
-  
+  // returns a random adjective, positive or negative
   public static String randomAdjective() {
     boolean positive = Math.random() < .5;
     if (positive) {
@@ -109,7 +110,7 @@ public class Review {
       return randomNegativeAdj();
     }
   }
-
+// calculates the average rating for Disneyland reviews
   public static double averageDisneylandRating() {
     double total = 0;
     int count = 0;
@@ -117,19 +118,19 @@ public class Review {
       Scanner input = new Scanner(new File("DisneylandReviewsList.csv"));
       if (input.hasNextLine()) input.nextLine();
       while (input.hasNextLine()) {
-        String[] parts = input.nextLine().split(",");
-        if (parts.length >= 1 && !parts[0].isEmpty()) {
-          total += Double.parseDouble(parts[0]);
-          count++;
+        String[] parts = input.nextLine().split(","); // Assumes rating is the first element
+        if (parts.length >= 1 && !parts[0].isEmpty()) { // Added check for empty rating
+          total += Double.parseDouble(parts[0]); // Parses rating
+          count++; // Increment count only if a valid rating is found
         }
       }
       input.close();
-    } catch (Exception e) {
-      System.out.println("Error reading or parsing DisneylandReviewsList.csv");
+    } catch (Exception e) { // catches both FileNotFoundException and NumberFormatException
+      System.out.println("Error reading or parsing DisneylandReviewsList.csv"); // Added comment for clarity
     }
     return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0;
   }
-
+// calculates the average rating for Universal Studios reviews
   public static double averageUniversalStudiosRating() {
     double total = 0;
     int count = 0;
@@ -143,7 +144,7 @@ public class Review {
         if (parts.length >= 1 && !parts[0].isEmpty()) {
           String ratingStr = parts[0].replaceAll("[^0-9.]", "");
           if (!ratingStr.isEmpty()) {
-            total += Double.parseDouble(ratingStr);
+            total += Double.parseDouble(ratingStr); 
             count++;
           }
         }
@@ -154,22 +155,22 @@ public class Review {
     }
     return count > 0 ? Math.round((total / count) * 100.0) / 100.0 : 0;
   }
-
+// calculates the average sentiment for Disneyland reviews
   public static double averageDisneylandSentiment() {
     double totalSentiment = 0;
     int count = 0;
     try {
       Scanner input = new Scanner(new File("DisneylandReviewsList.csv"));
-      if (input.hasNextLine()) input.nextLine();
-      while (input.hasNextLine()) {
+      if (input.hasNextLine()) input.nextLine(); // skip header
+      while (input.hasNextLine()) { // process each review
         String[] parts = input.nextLine().split(",");
         if (parts.length >= 2) {
           String[] words = parts[1].split(" ");
-          for (String w : words) {
+          for (String w : words) { // process each word
             double val = sentimentVal(removePunctuation(w));
-            if (val != 0) {
-              totalSentiment += val;
-              count++;
+            if (val != 0) { 
+              totalSentiment += val; 
+              count++; // increment count only for words with sentiment values
             }
           }
         }
