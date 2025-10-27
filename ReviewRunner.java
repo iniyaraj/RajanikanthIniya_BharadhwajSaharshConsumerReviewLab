@@ -4,11 +4,11 @@ class ReviewRunner {
     double disneylandAverage = Review.averageDisneylandRating(); // Method Call #1
     System.out.println("Average Disneyland Rating: " + disneylandAverage);
 
-    double universalAverage = Review.averageUniversalStudiosRating(); // Method Call # 2
-    System.out.println("Average Universal Studios Rating: " + universalAverage);
-
-    double disneylandSentiment = Review.averageDisneylandSentiment(); // Method Call #3
+    double disneylandSentiment = Review.averageDisneylandSentiment(); // Method Call #2
     System.out.println("Average Disneyland Sentiment Value: " + disneylandSentiment);
+
+    double universalAverage = Review.averageUniversalStudiosRating(); // Method Call # 3
+    System.out.println("Average Universal Studios Rating: " + universalAverage);
 
     double universalSentiment = Review.averageUniversalSentiment(); // Method Call #4
     System.out.println("Average Universal Studios Sentiment Value: " + universalSentiment);
